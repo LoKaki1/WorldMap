@@ -18,7 +18,7 @@ public interface ICameraContoller
     Vector3 Position { get; set; }
 
     float FieldOfView { get; set; }
-    float Aspect { get; set; }
+    float Aspect { get; }
     float NearPlane { get; set; }
     float FarPlane { get; set; }
 

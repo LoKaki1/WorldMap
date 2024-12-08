@@ -1,7 +1,9 @@
 ﻿using Silk.NET.OpenGL;
 using WorldMap.Common.Buffers.Abstracts;
+using WorldMap.Common.Models.Buffers;
 using WorldMap.Common.Models.Enums;
 using WorldMap.Common.OpenGL.Buffers.Converters;
+using WorldMap.Common.OpenGL.Pipline;
 
 namespace WorldMap.Common.OpenGL.Buffers
 {
@@ -16,17 +18,17 @@ namespace WorldMap.Common.OpenGL.Buffers
         public PrimitiveType PrimitiveType { get; set; }
 
         public VertexBufferGL(GL gl,
-                              Primitives primitiveType,
+                              VertexBufferParameters parameters,
                               BufferTargetARB bufferTargetARB,
                               BufferUsageARB bufferUsageARB,
                               VertexAttribPointerType vertexAttribPointerType)
-            : base(primitiveType)
+            : base(parameters)
         {
             m_BufferTargetARB = bufferTargetARB;
             m_BufferUsageARB = bufferUsageARB;
             m_VertexAttribPointerType = vertexAttribPointerType;
             Gl = gl;
-            PrimitiveType = PrimtivesToOpenGLPrimitives.Convert(primitiveType);
+            PrimitiveType = PrimtivesToOpenGLPrimitives.Convert(parameters.Primitive);
             // Create a VAO
             VaoHandle = Gl.GenVertexArray();
             Gl.BindVertexArray(VaoHandle);
@@ -49,18 +51,27 @@ namespace WorldMap.Common.OpenGL.Buffers
             UnbindVAO();
         }
 
+        /// <summary>
+        /// On open gl this function can take a lot of time and must happend on the main thread therefore we must enque it to the next render call to not cause a freeze 
+        /// Also we will create an engine which divide the buffer to little parts with the function `GL.BufferSubData`
+        /// </summary>
+        /// <param name="size"></param>
+        /// <param name="data"></param>
         public override unsafe void BufferData(int size, T* data)
         {
             VertexNumber = size;
+            PiplineGL.EnqueToPipline(() =>
+            {
+                BindVBO();
+                Gl.BufferData(m_BufferTargetARB,
+                               (uint)(size * VertexNumber),
+                               data,
+                               m_BufferUsageARB);
+                UnbindVBO();
 
-            BindVBO();
-            Gl.BufferData(m_BufferTargetARB,
-                           (uint)(size * VertexNumber),
-                           data,
-                           m_BufferUsageARB);
-            UnbindVBO();
-
-            IsBufferd = true;
+                IsBufferd = true;
+                OnBuffered?.Invoke();
+            });
         }
 
         protected virtual void SetupVAO()

@@ -1,5 +1,5 @@
-using System;
 using WorldMap.Common.Buffers.Interfaces;
+using WorldMap.Common.Models.Buffers;
 using WorldMap.Common.Models.Enums;
 
 namespace WorldMap.Common.Buffers.Abstracts;
@@ -15,11 +15,13 @@ public abstract unsafe class VertexBufferBase<T> : IVertexBuffer<T> where T : un
     public int VertexNumber { get; protected set; }
 
     public Primitives BufferPrimitive { get;  set; }
+    public Action? OnBuffered { get; }
 
-    public VertexBufferBase(Primitives primitives)
+    public VertexBufferBase(VertexBufferParameters parameters)
     {
         VertexSize = sizeof(T);
-        BufferPrimitive = primitives;
+        BufferPrimitive = parameters.Primitive;
+        OnBuffered = parameters.OnBuffered;
     }
 
     public abstract void BindAndDraw();
