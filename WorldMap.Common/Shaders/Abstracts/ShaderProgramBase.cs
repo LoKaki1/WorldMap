@@ -15,7 +15,6 @@ public abstract class ShaderProgramBase : IShaderProgram
         Shaders = shaders;
     }
 
-
     public virtual void Dispose()
     {
         IsActive = false;

@@ -6,10 +6,6 @@
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Folder Include="Buffers/" />
-  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Silk.NET" Version="2.21.0" />
   </ItemGroup>

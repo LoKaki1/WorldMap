@@ -20,6 +20,6 @@ public interface IShaderUniform<T>
     /// Set the value in the uniform
     /// </summary>
     /// <param name="value"></param>
-    /// <returns></returns>
+    /// <returns>if the set succeded</returns>
     bool Set(T value);
 }

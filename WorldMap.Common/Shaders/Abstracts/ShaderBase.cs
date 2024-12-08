@@ -17,13 +17,6 @@ public abstract class ShaderBase : IShader
         m_ShaderCode = shader;
     }
 
-    public bool Compile(out string error)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Dispose()
-    {
-        throw new NotImplementedException();
-    }
+    public abstract bool Compile(out string error);
+    public abstract void Dispose();
 }
