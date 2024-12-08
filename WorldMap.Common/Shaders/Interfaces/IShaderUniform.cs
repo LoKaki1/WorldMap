@@ -17,6 +17,10 @@ public interface IShaderUniform<T>
     /// </summary>
     string Uniform { get; }
     /// <summary>
+    /// Location in the of the uniform
+    /// </summary>
+    int Location { get; }
+    /// <summary>
     /// Set the value in the uniform
     /// </summary>
     /// <param name="value"></param>

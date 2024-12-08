@@ -25,8 +25,5 @@ public abstract class ShaderProgramBase : IShaderProgram
     }
     public abstract int GetUniformLocation(string uniform);
     public abstract bool Initialize(out string[] errors);
-    public virtual void UseProgram()
-    {
-        IsActive = true;
-    }
+    public abstract void UseProgram();
 }
