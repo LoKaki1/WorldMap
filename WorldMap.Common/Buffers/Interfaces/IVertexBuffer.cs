@@ -32,7 +32,7 @@ public unsafe interface IVertexBuffer<T> where T : unmanaged
     /// </summary>
     Primitives BufferPrimitive { get; set; }
 
-    
+
     /// <summary>
     /// Bind the buffer to the current program and executes the program on the buffer
     /// 
@@ -43,6 +43,6 @@ public unsafe interface IVertexBuffer<T> where T : unmanaged
     /// <summary>
     /// Buffer the data to the GPU context 
     /// </summary>
-    void BufferData(int size, T* data);
+    void BufferData(int size, T* data, Action? onBuffer = null);
 
 }

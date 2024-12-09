@@ -3,7 +3,7 @@
     public interface IMap
     {
         bool IsRendering { get; }
-        bool IsUpdaeting { get; }
+        bool IsUpdating { get; }
 
         void Update();
         void Render();

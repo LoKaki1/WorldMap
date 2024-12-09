@@ -1,8 +1,14 @@
-﻿using WorldMap.Common.Buffers.Interfaces;
+﻿using System.Reflection.Metadata;
+using System.Runtime.InteropServices;
+using WorldMap.Common.Allocators;
+using WorldMap.Common.Buffers.Interfaces;
+using WorldMap.Common.Camera.Interfaces;
 using WorldMap.Common.Factories.Interfaces;
 using WorldMap.Common.Models.Buffers;
 using WorldMap.Common.Models.Enums;
 using WorldMap.Heights.Map.Interfaces;
+using WorldMap.Heights.Shaders;
+using WorldMap.Heights.TempCauseImLazy;
 using WorldMap.Heights.Vertex;
 
 namespace WorldMap.Heights.Map
@@ -10,26 +16,93 @@ namespace WorldMap.Heights.Map
     public sealed class StaticMap : IMap
     {
         private readonly IVertexBuffer<HeightVertex> m_VertexBuffer;
+        private readonly ICameraContoller m_CameraController;
+        private readonly HeightMapShader m_MapShader;
 
         public bool IsRendering { get; private set; }
 
-        public bool IsUpdaeting { get; private set; }
+        public bool IsUpdating { get; private set; }
 
         public StaticMap(IBufferFactory factory,
-                         IShaderFactory shaderFactory)
+                         IShaderFactory shaderFactory,
+                         ICameraContoller cameraContoller)
         {
             var vertexParams = new VertexBufferParameters(Primitives.TrianglesStrips);
             m_VertexBuffer = factory.CreateVertexBuffer<HeightVertex>(vertexParams);
+            m_MapShader = new HeightMapShader(shaderFactory);
+            m_CameraController = cameraContoller;
         }
 
         public void Render()
         {
-            throw new NotImplementedException();
+            IsRendering = true;
+            // First let opengl that we want to use this shader now
+            m_MapShader.UseShader();
+            // creation the projection
+            var projection = m_CameraController.GetViewProjection();
+            // Set the projection in the uniform
+            m_MapShader.ModelViewProjection.Set(projection);
+            // Bind the current shader to the buffer and draw
+            m_VertexBuffer.BindAndDraw();
+            IsRendering = false;
         }
 
         public void Update()
         {
-            throw new NotImplementedException();
+            IsUpdating = true;
+            GenerateMap();
+        }
+
+        unsafe void GenerateMap()
+        {
+            var bytes_vertexData = Marshal.SizeOf<HeightVertex>() * Constants.VERTICES_PER_CHUNK;
+            var offset = Allocator.Alloc<HeightVertex>(bytes_vertexData);
+            var write = offset;
+
+            for (int z = 0; z < Constants.HEIGHTMAP_SIZE; z++)
+            {
+                int x = 0;
+
+                var altitude0 = x + z;
+                var altitude1 = x + z * 2;
+                var altitude2 = x * 2 + z;
+
+
+                // First vertex is a degenerate
+                write++->Y = altitude0;
+
+
+                // Create the first triangle
+                write++->Y = altitude0;
+                write++->Y = altitude1;
+                write++->Y = altitude2;
+                // Rest of the strip
+                x += 1;
+                var altitude = x + z * 2;
+                write++->Y = altitude;
+
+                x += 1;
+
+                for (; x <= Constants.HEIGHTMAP_SIZE; x++)
+                {
+                    altitude = x + z;
+                    write++->Y = altitude;
+
+                    altitude = x + z * 2;
+                    write++->Y = altitude;
+
+                }
+
+                // Degenerate
+                altitude = x - 1 + z + 1;
+                write++->Y = altitude;
+            }
+
+            m_VertexBuffer.BufferData(Constants.VERTICES_PER_CHUNK, offset, () =>
+            {
+                Allocator.Free(ref offset, ref bytes_vertexData);
+                IsUpdating = false;
+            });
         }
     }
 }

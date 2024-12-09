@@ -5,7 +5,9 @@ namespace WorldMap.Common.Allocators;
 
 public static unsafe class Allocator
 {
-    public static void* Alloc(int byteCount) => NativeMemory.Alloc((nuint)byteCount);
+#pragma warning disable CS8500
+    public static T* Alloc<T>(int byteCount) => (T*)NativeMemory.Alloc((nuint)byteCount);
+#pragma warning restore
 
     public static void* AllocZeroed(int byteCount) => NativeMemory.AllocZeroed((nuint)byteCount);
 

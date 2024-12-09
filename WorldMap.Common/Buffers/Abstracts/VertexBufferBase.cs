@@ -14,7 +14,7 @@ public abstract unsafe class VertexBufferBase<T> : IVertexBuffer<T> where T : un
 
     public int VertexNumber { get; protected set; }
 
-    public Primitives BufferPrimitive { get;  set; }
+    public Primitives BufferPrimitive { get; set; }
     public Action? OnBuffered { get; }
 
     public VertexBufferBase(VertexBufferParameters parameters)
@@ -26,5 +26,5 @@ public abstract unsafe class VertexBufferBase<T> : IVertexBuffer<T> where T : un
 
     public abstract void BindAndDraw();
 
-    public abstract void BufferData(int size, T* data);
+    public abstract void BufferData(int size, T* data, Action? onBuffer = null);
 }

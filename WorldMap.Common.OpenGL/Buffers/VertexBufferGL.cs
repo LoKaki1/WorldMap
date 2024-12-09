@@ -57,9 +57,10 @@ namespace WorldMap.Common.OpenGL.Buffers
         /// </summary>
         /// <param name="size"></param>
         /// <param name="data"></param>
-        public override unsafe void BufferData(int size, T* data)
+        public override unsafe void BufferData(int size, T* data, Action? onBuffer = null)
         {
             VertexNumber = size;
+            var actualOnBuffer = onBuffer ?? OnBuffered;
             PiplineGL.EnqueToPipline(() =>
             {
                 BindVBO();
@@ -70,7 +71,7 @@ namespace WorldMap.Common.OpenGL.Buffers
                 UnbindVBO();
 
                 IsBufferd = true;
-                OnBuffered?.Invoke();
+                actualOnBuffer?.Invoke();
             });
         }
 
@@ -82,7 +83,7 @@ namespace WorldMap.Common.OpenGL.Buffers
                                    1,
                                    m_VertexAttribPointerType,
                                    false,
-                                   (uint) VertexSize,
+                                   (uint)VertexSize,
                                    null);
         }
         // Shortcut functions
