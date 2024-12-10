@@ -15,6 +15,12 @@ namespace WorldMap.Common.OpenGL.Shaders
         public ShaderProgramGL(GL gl, ShaderGL[] shaders) : base(shaders)
         {
             Gl = gl;
+            var isValid = Initialize(out var data);
+            Console.WriteLine(data);
+            if (!isValid)
+            {
+                throw new Exception("AAAA");
+            }
         }
 
         public override bool Initialize(out string[] errors)
@@ -25,6 +31,13 @@ namespace WorldMap.Common.OpenGL.Shaders
             // Attach shaders to the program
             foreach (var shader in Shaders)
             {
+                var isValid = shader.Compile(out string s);
+
+                if (!isValid)
+                {
+                    throw new Exception("AAAA");
+                }
+
                 Gl.AttachShader(ProgramHandle, shader.ShaderHandle);
             }
 

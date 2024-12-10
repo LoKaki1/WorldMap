@@ -47,6 +47,68 @@
 // 
 // And what we will need to create in this project
 //
+using System.Runtime.InteropServices;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Silk.NET.GLFW;
+using Silk.NET.Input;
+using Silk.NET.OpenGL;
+using Silk.NET.Windowing;
+using WorldMap;
+using WorldMap.Common.Camera.Interfaces;
+using WorldMap.Common.Factories.Interfaces;
+using WorldMap.Common.OpenGL.Camera;
+using WorldMap.Common.OpenGL.Factories;
+using WorldMap.Heights.Map;
+using WorldMap.Heights.Map.Interfaces;
+
+var builder = Host.CreateApplicationBuilder();
+var services = builder.Services;
+// We can't just use the the client code as we always do, what we will do is creating the window 
+// and then getting opengl api and then we will start to run the our engine
+// Create a Silk.NET window
+var options = WindowOptions.Default;
+options.API = new GraphicsAPI(ContextAPI.OpenGL, new APIVersion(3, 3));
+options.Position = new(200, 200);
+options.PreferredDepthBufferBits = 32;
+options.Title = "gl_VertexID";
+
+var window = Window.Create(options);
+
+var glfw = GlfwProvider.GLFW.Value;
+
+if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+{
+    glfw.WindowHint(WindowHintInt.ContextVersionMajor, 4); // Change version if needed
+    glfw.WindowHint(WindowHintInt.ContextVersionMinor, 6); // or 4.5, depending on your machine
+    glfw.WindowHint(WindowHintBool.OpenGLForwardCompat, true);
+    glfw.WindowHint(WindowHintOpenGlProfile.OpenGlProfile, OpenGlProfile.Core);
+}
+window.Load += () =>
+{
+    GL gl = window.CreateOpenGL();
+    services.AddSingleton(gl);
+    services.AddSingleton(window);
+    services.AddSingleton(glfw);
+    var inputContext = window.CreateInput();
+    var keyboard = inputContext.Keyboards[0];
+    var mouse = inputContext.Mice[0];
+    services.AddSingleton(keyboard);
+    services.AddSingleton(mouse);
+    services.AddSingleton<ICameraContoller, CameraControllerGL>();
+    services.AddSingleton<IBufferFactory, OpenGLFactory>();
+    services.AddSingleton<IShaderFactory, OpenGLFactory>();
+    services.AddSingleton<IMap, StaticMap>();
+    services.AddSingleton<Client>();
+    var provider = services.BuildServiceProvider();
+    var client = provider.GetRequiredService<Client>();
+    window.Run();
+};
+window.Initialize();
+builder.Build();
+
+
+
 
 // using Silk.NET.OpenGL;
 // using Silk.NET.Windowing;

@@ -8,9 +8,9 @@ namespace WorldMap.Common.OpenGL.Shaders
     public sealed class ShaderGL : ShaderBase
     {
         public GL Gl { get; set; }
-        public ShaderType ShaderTypeGL { get; set; }    
-        public override uint ShaderHandle { get; protected set ; }
-        
+        public ShaderType ShaderTypeGL { get; set; }
+        public override uint ShaderHandle { get; protected set; }
+
         public ShaderGL(GL gl,
                         ShadersTypes shaderType,
                         string shader) : base(shaderType, shader)

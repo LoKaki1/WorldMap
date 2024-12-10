@@ -22,6 +22,7 @@ namespace WorldMap.Heights.Map
         public bool IsRendering { get; private set; }
 
         public bool IsUpdating { get; private set; }
+        private bool m_IsReady;
 
         public StaticMap(IBufferFactory factory,
                          IShaderFactory shaderFactory,
@@ -42,6 +43,7 @@ namespace WorldMap.Heights.Map
             var projection = m_CameraController.GetViewProjection();
             // Set the projection in the uniform
             m_MapShader.ModelViewProjection.Set(projection);
+
             // Bind the current shader to the buffer and draw
             m_VertexBuffer.BindAndDraw();
             IsRendering = false;
@@ -49,6 +51,8 @@ namespace WorldMap.Heights.Map
 
         public void Update()
         {
+            if (m_IsReady || IsUpdating) return;
+
             IsUpdating = true;
             GenerateMap();
         }
@@ -63,9 +67,9 @@ namespace WorldMap.Heights.Map
             {
                 int x = 0;
 
-                var altitude0 = x + z;
-                var altitude1 = x + z * 2;
-                var altitude2 = x * 2 + z;
+                var altitude0 = 0;
+                var altitude1 = 0;
+                var altitude2 = 0;
 
 
                 // First vertex is a degenerate
@@ -78,23 +82,23 @@ namespace WorldMap.Heights.Map
                 write++->Y = altitude2;
                 // Rest of the strip
                 x += 1;
-                var altitude = x + z * 2;
+                var altitude = 0;
                 write++->Y = altitude;
 
                 x += 1;
 
                 for (; x <= Constants.HEIGHTMAP_SIZE; x++)
                 {
-                    altitude = x + z;
+                    altitude = 0;
                     write++->Y = altitude;
 
-                    altitude = x + z * 2;
+                    altitude = 0;
                     write++->Y = altitude;
 
                 }
 
                 // Degenerate
-                altitude = x - 1 + z + 1;
+                altitude = 0;
                 write++->Y = altitude;
             }
 
@@ -102,6 +106,7 @@ namespace WorldMap.Heights.Map
             {
                 Allocator.Free(ref offset, ref bytes_vertexData);
                 IsUpdating = false;
+                m_IsReady = true;
             });
         }
     }

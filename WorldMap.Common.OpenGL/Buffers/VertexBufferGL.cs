@@ -47,6 +47,7 @@ namespace WorldMap.Common.OpenGL.Buffers
         public override void BindAndDraw()
         {
             BindVAO();
+            Gl.FrontFace(FrontFaceDirection.Ccw);
             Gl.DrawArrays(PrimitiveType, 0, (uint)VertexNumber);
             UnbindVAO();
         }
@@ -59,13 +60,13 @@ namespace WorldMap.Common.OpenGL.Buffers
         /// <param name="data"></param>
         public override unsafe void BufferData(int size, T* data, Action? onBuffer = null)
         {
-            VertexNumber = size;
             var actualOnBuffer = onBuffer ?? OnBuffered;
             PiplineGL.EnqueToPipline(() =>
             {
+                VertexNumber = size;
                 BindVBO();
                 Gl.BufferData(m_BufferTargetARB,
-                               (uint)(size * VertexNumber),
+                               (uint)(size * VertexSize),
                                data,
                                m_BufferUsageARB);
                 UnbindVBO();

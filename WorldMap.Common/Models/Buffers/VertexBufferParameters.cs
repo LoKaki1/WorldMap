@@ -8,7 +8,7 @@ namespace WorldMap.Common.Models.Buffers
         public Primitives Primitive { get; set; }
         public Action? OnBuffered { get; set; }
         public VertexBufferParameters(Primitives primitive,
-                                      Action onBuffered = null)   
+                                      Action? onBuffered = null)
         {
             Primitive = primitive;
             OnBuffered = onBuffered;

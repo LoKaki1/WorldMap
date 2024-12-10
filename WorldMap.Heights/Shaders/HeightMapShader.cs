@@ -31,13 +31,14 @@ public class HeightMapShader
     }
 
     public static string FragmentShader = @"
+    #version 330
 out vec4 gColor;
 
 in vec2 vUV;
 in vec2 vBary;
 flat in float vBrightness;
 
-uniform bool showWireframe;
+uniform bool showWireframe = true;
 
 float barycentric(vec2 vBC, float width)
 {
@@ -61,8 +62,8 @@ void main()
 ";
 
     public static string VertexShader = @$"
-
-    layout (location = 0) in float aAltitude;
+#version 330
+    layout (location = 0) in float aY;
 
     out vec2 vUV;
     out vec2 vBary;
@@ -94,7 +95,7 @@ void main()
 
 
         // Render to the screen
-        vec3 pos = vec3(xPos, aAltitude, zPos);
+        vec3 pos = vec3(xPos, aY, zPos);
         gl_Position = mvp * vec4(pos, 1.0);
 
 

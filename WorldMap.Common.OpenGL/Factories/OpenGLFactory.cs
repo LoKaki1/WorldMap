@@ -12,6 +12,10 @@ namespace WorldMap.Common.OpenGL.Factories
     public sealed class OpenGLFactory : IBufferFactory, IShaderFactory
     {
         public GL Gl { get; set; }
+        public OpenGLFactory(GL gl)
+        {
+            Gl = gl;
+        }
 
         public IShader CreateShader(ShaderParameters parameters)
         {
@@ -22,7 +26,7 @@ namespace WorldMap.Common.OpenGL.Factories
 
         public IShaderProgram CreateShaderProgram(ShaderProgramParameters parameters)
         {
-            return new ShaderProgramGL(Gl, 
+            return new ShaderProgramGL(Gl,
                                        parameters.Shaders.OfType<ShaderGL>().ToArray());
         }
 
@@ -36,9 +40,9 @@ namespace WorldMap.Common.OpenGL.Factories
         public IVertexBuffer<T> CreateVertexBuffer<T>(VertexBufferParameters vertexBufferParameters) where T : unmanaged
         {
             return new VertexBufferGL<T>(Gl,
-                                         vertexBufferParameters.Primitive,
+                                         vertexBufferParameters,
                                          BufferTargetARB.ArrayBuffer,
-                                         BufferUsageARB.StreamDraw,
+                                         BufferUsageARB.StaticDraw,
                                          VertexAttribPointerType.Float);
         }
     }

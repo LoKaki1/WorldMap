@@ -8,13 +8,13 @@ namespace WorldMap.Common.OpenGL.Pipline
 
         public static void EnqueToPipline(Action action)
         {
-            Pipline.Enqueue(action);    
+            Pipline.Enqueue(action);
         }
 
         public static void Run()
         {
-            if (Pipline.IsEmpty || !Pipline.TryDequeue(out Action action)) return;
-            
+            if (Pipline.IsEmpty || !Pipline.TryDequeue(out Action? action)) return;
+
             action?.Invoke();
         }
 
