@@ -80,18 +80,18 @@ void main()
     {{    
         float runIndex = mod(gl_VertexID, VERTICES_PER_RUN);
         float clampedIndex = clamp(runIndex - 1.0, 0.0, VERTICES_PER_RUN_NOT_DEGENERATE); // First and last are degenerate
-
+        float triangleSize = 32;
 
         // X increments every 2 vertices
-        float xPos = floor(clampedIndex / 2.0);
+        float xPos = floor(clampedIndex / 2.0) * triangleSize;
 
 
         // Z increments every N vertices
-        float zPos = floor(gl_VertexID / VERTICES_PER_RUN);
+        float zPos = floor(gl_VertexID / VERTICES_PER_RUN) * triangleSize;
 
 
         // Move every 2nd vertex 1 unit on the z axis, to create a triangle
-        zPos += mod(clampedIndex, 2.0);
+        zPos += mod(clampedIndex, 2.0) * triangleSize;
 
 
         // Render to the screen

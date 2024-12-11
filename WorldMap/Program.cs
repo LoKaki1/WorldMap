@@ -104,6 +104,11 @@ window.Load += () =>
     var client = provider.GetRequiredService<Client>();
     window.Run();
 };
+window.Size = new(800, 600);
+var ticks = 17_000;
+window.FramesPerSecond = ticks;
+window.UpdatesPerSecond = ticks;
+window.VSync = false;
 window.Initialize();
 builder.Build();
 

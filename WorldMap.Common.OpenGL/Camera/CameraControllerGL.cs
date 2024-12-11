@@ -11,9 +11,9 @@ namespace WorldMap.Common.OpenGL.Camera
         private readonly IKeyboard m_Keyboard;
         private readonly IMouse m_Mouse;
         private readonly IWindow m_Window;
-        
+
         private bool m_CaptureMouse;
-        
+
         private Vector2 m_LastMouse;
 
         public override float Aspect => m_Window.Size.X / (float)m_Window.Size.Y;
@@ -60,11 +60,11 @@ namespace WorldMap.Common.OpenGL.Camera
 
             // Update camera position
             // Fly camera movement
-            float movementSpeed = 0.15f;
+            float movementSpeed = 150 / (float)m_Window.UpdatesPerSecond;
 
             if (m_Keyboard.IsKeyPressed(Key.ShiftLeft))
             {
-                movementSpeed *= 16;
+                movementSpeed *= 30;
             }
             if (m_Keyboard.IsKeyPressed(Key.W))
                 Position += CameraHelper.FromPitchYaw(Pitch, Yaw) * movementSpeed;
@@ -80,6 +80,11 @@ namespace WorldMap.Common.OpenGL.Camera
                 Position += CameraHelper.FromPitchYaw(MathF.PI / 2, 0) * movementSpeed;
             else if (m_Keyboard.IsKeyPressed(Key.Q))
                 Position += CameraHelper.FromPitchYaw(-MathF.PI / 2, 0) * movementSpeed;
+
+            if (Position.Y < 0.12)
+            {
+                Position = new Vector3(Position.X, 0.12f, Position.Z);
+            }
         }
     }
 }

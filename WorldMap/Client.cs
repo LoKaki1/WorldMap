@@ -46,15 +46,16 @@ public unsafe class Client
 
 
         m_Window.Render += (_) => Render();
-
-        m_Window.Size = new(800, 600);
-        m_Window.FramesPerSecond = 144;
-        m_Window.UpdatesPerSecond = 144;
-        m_Window.VSync = false;
+        m_Window.Update += (_) => Update();
         m_Window.FramebufferResize += OnFrameBufferResize;
-        // m_Window.FocusChanged += SilkOnFocusChanged;
     }
 
+    private void Update()
+    {
+        m_CameraController.Update();
+        m_Map.Update();
+        PiplineGL.Run();
+    }
     private void OnFrameBufferResize(Vector2D<int> d)
     {
         var currentWindow = (WindowHandle*)m_Window.Handle;
@@ -65,12 +66,8 @@ public unsafe class Client
     }
     private void Render()
     {
-        m_CameraController.Update();
-        m_Map.Update();
         PreRenderSetup();
         m_Map?.Render();
-        PiplineGL.Run();
-
     }
 
     void PreRenderSetup()
