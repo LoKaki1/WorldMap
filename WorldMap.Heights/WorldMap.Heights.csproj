@@ -10,5 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\WorldMap.Common\WorldMap.Common.csproj" />
   </ItemGroup>
-
+  <ItemGroup>
+    <PackageReference Include="UltimateQuadTree" Version="1.0.3" />
+  </ItemGroup>
 </Project>

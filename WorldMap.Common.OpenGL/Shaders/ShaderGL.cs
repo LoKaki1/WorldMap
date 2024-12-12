@@ -43,7 +43,6 @@ namespace WorldMap.Common.OpenGL.Shaders
 
             // Check it compiled successfully
             Gl.GetShader(ShaderHandle, ShaderParameterName.CompileStatus, out var status);
-
             if (status == (int)GLEnum.True)
             {
                 return true;

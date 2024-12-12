@@ -1,5 +1,6 @@
 ﻿using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
+using UltimateQuadTree;
 using WorldMap.Common.Allocators;
 using WorldMap.Common.Buffers.Interfaces;
 using WorldMap.Common.Camera.Interfaces;
