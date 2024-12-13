@@ -52,6 +52,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Silk.NET.GLFW;
 using Silk.NET.Input;
+using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
 using WorldMap;
@@ -69,9 +70,9 @@ var services = builder.Services;
 // Create a Silk.NET window
 var options = WindowOptions.Default;
 options.API = new GraphicsAPI(ContextAPI.OpenGL, new APIVersion(3, 3));
-options.Position = new(200, 200);
-options.PreferredDepthBufferBits = 32;
-options.Title = "gl_VertexID";
+var windowSize = new Vector2D<int>(800, 800);
+options.Position = new((1920 - windowSize.X ) / 2, (1080 - windowSize.Y) / 2);
+options.Title = "CodE?";
 
 var window = Window.Create(options);
 
@@ -104,8 +105,8 @@ window.Load += () =>
     var client = provider.GetRequiredService<Client>();
     window.Run();
 };
-window.Size = new(800, 600);
-var ticks = 17_000;
+window.Size = windowSize;
+var ticks = 60;
 window.FramesPerSecond = ticks;
 window.UpdatesPerSecond = ticks;
 window.VSync = false;
