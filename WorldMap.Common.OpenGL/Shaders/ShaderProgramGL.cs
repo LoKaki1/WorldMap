@@ -15,11 +15,18 @@ namespace WorldMap.Common.OpenGL.Shaders
         public ShaderProgramGL(GL gl, ShaderGL[] shaders) : base(shaders)
         {
             Gl = gl;
-            var isValid = Initialize(out var data);
+            var isValid = Initialize(out string[] data);
+            
             Console.WriteLine(data);
+            
             if (!isValid)
             {
-                throw new Exception("AAAA");
+                if (data is not null)
+                {
+                    throw new ArgumentException($"Shader Problems:\n {string.Join('\n', data)}");
+                }
+
+                throw new ArgumentException("What?");
             }
         }
 
