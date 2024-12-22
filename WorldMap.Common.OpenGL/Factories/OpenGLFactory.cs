@@ -41,8 +41,6 @@ namespace WorldMap.Common.OpenGL.Factories
         {
             return new VertexBufferGL<T>(Gl,
                                          vertexBufferParameters,
-                                         BufferTargetARB.ArrayBuffer,
-                                         BufferUsageARB.StaticDraw,
                                          VertexAttribPointerType.Float);
         }
     }

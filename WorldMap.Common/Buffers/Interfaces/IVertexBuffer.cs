@@ -43,6 +43,7 @@ public unsafe interface IVertexBuffer<T> where T : unmanaged
     /// <summary>
     /// Buffer the data to the GPU context 
     /// </summary>
-    void BufferData(int size, T* data, Action? onBuffer = null);
-
+    void BufferVertexData(int size, T* data, Action? onBuffer = null);
+    void BufferSSBO<SSBO>(int size, SSBO* data, Action? onBuffer = null)
+        where SSBO : unmanaged;
 }

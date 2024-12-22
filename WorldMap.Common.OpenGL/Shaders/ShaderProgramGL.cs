@@ -28,14 +28,13 @@ namespace WorldMap.Common.OpenGL.Shaders
             // Create shader program.
             ProgramHandle = Gl.CreateProgram();
 
-            // Attach shaders to the program
             foreach (var shader in Shaders)
             {
                 var isValid = shader.Compile(out string s);
 
                 if (!isValid)
                 {
-                    throw new Exception("AAAA");
+                    throw new ArgumentException(s);
                 }
 
                 Gl.AttachShader(ProgramHandle, shader.ShaderHandle);

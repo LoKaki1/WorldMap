@@ -9,23 +9,21 @@ namespace WorldMap.Common.OpenGL.Buffers
 {
     public unsafe class VertexBufferGL<T> : VertexBufferBase<T> where T : unmanaged
     {
-        private readonly BufferTargetARB m_BufferTargetARB;
-        private readonly BufferUsageARB m_BufferUsageARB;
         private readonly VertexAttribPointerType m_VertexAttribPointerType;
 
-        public bool IsBufferd { get; protected set; }
+        public bool IsVerticesBufferd { get; protected set; }
+        public bool IsSSBOBuffered { get; protected set; }
         public GL Gl { get; set; }
         public PrimitiveType PrimitiveType { get; set; }
+        public uint SSBOHandle { get; }
 
         public VertexBufferGL(GL gl,
                               VertexBufferParameters parameters,
-                              BufferTargetARB bufferTargetARB,
-                              BufferUsageARB bufferUsageARB,
                               VertexAttribPointerType vertexAttribPointerType)
             : base(parameters)
         {
-            m_BufferTargetARB = bufferTargetARB;
-            m_BufferUsageARB = bufferUsageARB;
+            // m_BufferTargetARB = bufferTargetARB;
+            // m_BufferUsageARB = bufferUsageARB;
             m_VertexAttribPointerType = vertexAttribPointerType;
             Gl = gl;
             PrimitiveType = PrimtivesToOpenGLPrimitives.Convert(parameters.Primitive);
@@ -35,13 +33,17 @@ namespace WorldMap.Common.OpenGL.Buffers
 
             // Create a VBO
             VboHandle = Gl.GenBuffer();
-            Gl.BindBuffer(m_BufferTargetARB, VboHandle);
-
+            Gl.BindBuffer(BufferTargetARB.ArrayBuffer, VboHandle);
             // Set up attribs
+            SSBOHandle = Gl.GenBuffer();
+            Gl.BindBuffer(BufferTargetARB.UniformBuffer, SSBOHandle);
+            // uint bindingPoint = 0; // Choose a binding point
+            // Gl.BindBufferBase(GLEnum.UniformBuffer, bindingPoint, SSBOHandle);
             SetupVAO();
             // Clean up
             UnbindVAO();
             UnbindVBO();
+            UnbindSSBO();
         }
 
         public override void BindAndDraw()
@@ -58,20 +60,21 @@ namespace WorldMap.Common.OpenGL.Buffers
         /// </summary>
         /// <param name="size"></param>
         /// <param name="data"></param>
-        public override unsafe void BufferData(int size, T* data, Action? onBuffer = null)
+        public override unsafe void BufferVertexData(int size, T* data, Action? onBuffer = null)
         {
             var actualOnBuffer = onBuffer ?? OnBuffered;
+
             PiplineGL.EnqueToPipline(() =>
             {
                 VertexNumber = size;
                 BindVBO();
-                Gl.BufferData(m_BufferTargetARB,
+                Gl.BufferData(BufferTargetARB.ArrayBuffer,
                                (uint)(size * VertexSize),
                                data,
-                               m_BufferUsageARB);
+                               BufferUsageARB.StaticDraw);
                 UnbindVBO();
 
-                IsBufferd = true;
+                IsVerticesBufferd = true;
                 actualOnBuffer?.Invoke();
             });
         }
@@ -79,7 +82,6 @@ namespace WorldMap.Common.OpenGL.Buffers
         protected virtual void SetupVAO()
         {
             Gl.EnableVertexAttribArray(0);
-
             Gl.VertexAttribPointer(0,
                                    1,
                                    m_VertexAttribPointerType,
@@ -87,11 +89,31 @@ namespace WorldMap.Common.OpenGL.Buffers
                                    (uint)VertexSize,
                                    null);
         }
+        public override unsafe void BufferSSBO<SSBO>(int size,
+                                                     SSBO* data,
+                                                     Action? onBuffer = null)
+        {
+            PiplineGL.EnqueToPipline(() =>
+             {
+                 BindSSBO();
+                 Gl.BindBufferBase(BufferTargetARB.UniformBuffer, 0u, SSBOHandle);
+                 Gl.BufferData(BufferTargetARB.UniformBuffer,
+                                  (uint)size,
+                                  data,
+                                  BufferUsageARB.StaticDraw);
+                 UnbindSSBO();
+
+                 IsVerticesBufferd = true;
+                 onBuffer?.Invoke();
+             });
+        }
         // Shortcut functions
         void BindVAO() => Gl.BindVertexArray(VaoHandle);
-        void BindVBO() => Gl.BindBuffer(m_BufferTargetARB, VboHandle);
+        void BindVBO() => Gl.BindBuffer(BufferTargetARB.ArrayBuffer, VboHandle);
+        void BindSSBO() => Gl.BindBuffer(BufferTargetARB.UniformBuffer, SSBOHandle);
+        void UnbindSSBO() => Gl.BindBuffer(BufferTargetARB.UniformBuffer, 0);
         void UnbindVAO() => Gl.BindVertexArray(0);
-        void UnbindVBO() => Gl.BindBuffer(m_BufferTargetARB, 0);
+        void UnbindVBO() => Gl.BindBuffer(BufferTargetARB.ArrayBuffer, 0);
     }
 }
 

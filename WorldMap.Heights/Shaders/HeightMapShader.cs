@@ -23,6 +23,7 @@ public class HeightMapShader
         m_ShaderProgram = shaderFactory.CreateShaderProgram(new([vertexShader, fragmentShader]));
         ModelViewProjection
             = shaderFactory.CreateShaderUnfiorm<Matrix4x4>(new ShaderUniformParameters(m_ShaderProgram, "mvp"));
+
     }
 
     public void UseShader()
@@ -31,7 +32,10 @@ public class HeightMapShader
     }
 
     public static string FragmentShader = @"
-    #version 330
+    #version 410
+    layout(std140) uniform MyUniformBlock {
+    vec3 color;
+};
 out vec4 gColor;
 
 in vec2 vUV;
@@ -52,17 +56,17 @@ float barycentric(vec2 vBC, float width)
 void main()
 {
     gColor = vec4(vBrightness);
-
-    if (showWireframe)
-    {
-        gColor.rgb *= 0.25;
-        gColor.rgb += vec3(1.0 - barycentric(vBary, 1.0));
-    }
+    gColor = vec4(color.x + 123, color.y + 40, color.z + 90, 80);
+    // if (showWireframe)
+    // {
+    //     gColor.rgb *= 0.25;
+    //     gColor.rgb += vec3(1.0 - barycentric(vBary, 1.0));
+    // }
 }
 ";
 
     public static string VertexShader = @$"
-#version 330
+#version 410
     layout (location = 0) in float aY;
 
     out vec2 vUV;

@@ -69,9 +69,9 @@ var services = builder.Services;
 // and then getting opengl api and then we will start to run the our engine
 // Create a Silk.NET window
 var options = WindowOptions.Default;
-options.API = new GraphicsAPI(ContextAPI.OpenGL, new APIVersion(3, 3));
+options.API = new GraphicsAPI(ContextAPI.OpenGL, new APIVersion(4, 1));
 var windowSize = new Vector2D<int>(800, 800);
-options.Position = new((1920 - windowSize.X ) / 2, (1080 - windowSize.Y) / 2);
+options.Position = new((1920 - windowSize.X) / 2, (1080 - windowSize.Y) / 2);
 options.Title = "CodE?";
 
 var window = Window.Create(options);
@@ -81,7 +81,7 @@ var glfw = GlfwProvider.GLFW.Value;
 if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
 {
     glfw.WindowHint(WindowHintInt.ContextVersionMajor, 4); // Change version if needed
-    glfw.WindowHint(WindowHintInt.ContextVersionMinor, 6); // or 4.5, depending on your machine
+    glfw.WindowHint(WindowHintInt.ContextVersionMinor, 1); // or 4.5, depending on your machine
     glfw.WindowHint(WindowHintBool.OpenGLForwardCompat, true);
     glfw.WindowHint(WindowHintOpenGlProfile.OpenGlProfile, OpenGlProfile.Core);
 }

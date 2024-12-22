@@ -1,4 +1,5 @@
-﻿using System.Reflection.Metadata;
+﻿using System.Numerics;
+using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
 using UltimateQuadTree;
 using WorldMap.Common.Allocators;
@@ -103,9 +104,18 @@ namespace WorldMap.Heights.Map
                 write++->Y = altitude;
             }
 
-            m_VertexBuffer.BufferData(Constants.VERTICES_PER_CHUNK, offset, () =>
+            m_VertexBuffer.BufferVertexData(Constants.VERTICES_PER_CHUNK, offset, () =>
             {
                 Allocator.Free(ref offset, ref bytes_vertexData);
+                // IsUpdating = false;
+                // m_IsReady = true;
+            });
+            var ssboSize = sizeof(ColorSomething);
+            var color = Allocator.Alloc<ColorSomething>(ssboSize);
+            color->Color = new Vector3(12, 133, 14);
+            m_VertexBuffer.BufferSSBO(sizeof(ColorSomething), color, () =>
+            {
+                Allocator.Free(ref color, ref ssboSize);
                 IsUpdating = false;
                 m_IsReady = true;
             });
