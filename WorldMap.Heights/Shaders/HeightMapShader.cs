@@ -10,7 +10,7 @@ namespace WorldMap.Heights.Shaders;
 
 public class HeightMapShader
 {
-    private readonly IShaderProgram m_ShaderProgram;
+    public IShaderProgram ShaderProgram { get; }
 
     public IShaderUniform<Matrix4x4> ModelViewProjection { get; }
 
@@ -20,20 +20,20 @@ public class HeightMapShader
         var vertexShader = shaderFactory.CreateShader(vertexShaderParams);
         var fragmentShaderParams = new ShaderParameters(FragmentShader, ShadersTypes.Fragmenet);
         var fragmentShader = shaderFactory.CreateShader(fragmentShaderParams);
-        m_ShaderProgram = shaderFactory.CreateShaderProgram(new([vertexShader, fragmentShader]));
+        ShaderProgram = shaderFactory.CreateShaderProgram(new([vertexShader, fragmentShader]));
         ModelViewProjection
-            = shaderFactory.CreateShaderUnfiorm<Matrix4x4>(new ShaderUniformParameters(m_ShaderProgram, "mvp"));
+            = shaderFactory.CreateShaderUnfiorm<Matrix4x4>(new ShaderUniformParameters(ShaderProgram, "mvp"));
 
     }
 
     public void UseShader()
     {
-        m_ShaderProgram.UseProgram();
+        ShaderProgram.UseProgram();
     }
 
     public static string FragmentShader = @"
     #version 410
-    layout(std140) uniform MyUniformBlock {
+    layout(std140) uniform Code {
     vec3 color;
 };
 out vec4 gColor;
@@ -56,12 +56,13 @@ float barycentric(vec2 vBC, float width)
 void main()
 {
     gColor = vec4(vBrightness);
-    gColor = vec4(color.x + 123, color.y + 40, color.z + 90, 80);
-    // if (showWireframe)
-    // {
-    //     gColor.rgb *= 0.25;
-    //     gColor.rgb += vec3(1.0 - barycentric(vBary, 1.0));
-    // }
+    //gColor.rgb += vec3(1.0-color);
+     if (showWireframe)
+     {
+        vec3 p = color * 0.0025;
+        gColor.rgb *= 0.25;
+        gColor.rgb += vec3(1.0 - barycentric(vBary, 1.5)) - p ;
+     }
 }
 ";
 

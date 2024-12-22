@@ -8,6 +8,7 @@ using WorldMap.Common.Camera.Interfaces;
 using WorldMap.Common.Factories.Interfaces;
 using WorldMap.Common.Models.Buffers;
 using WorldMap.Common.Models.Enums;
+using WorldMap.Common.Shaders.Interfaces;
 using WorldMap.Heights.Map.Interfaces;
 using WorldMap.Heights.Shaders;
 using WorldMap.Heights.TempCauseImLazy;
@@ -15,11 +16,12 @@ using WorldMap.Heights.Vertex;
 
 namespace WorldMap.Heights.Map
 {
-    public sealed class StaticMap : IMap
+    public sealed unsafe class StaticMap : IMap
     {
         private readonly IVertexBuffer<HeightVertex> m_VertexBuffer;
         private readonly ICameraContoller m_CameraController;
         private readonly HeightMapShader m_MapShader;
+        private readonly IShaderProgram m_ShaderProgram;
 
         public bool IsRendering { get; private set; }
 
@@ -33,6 +35,18 @@ namespace WorldMap.Heights.Map
             var vertexParams = new VertexBufferParameters(Primitives.TrianglesStrips);
             m_VertexBuffer = factory.CreateVertexBuffer<HeightVertex>(vertexParams);
             m_MapShader = new HeightMapShader(shaderFactory);
+            m_ShaderProgram = m_MapShader.ShaderProgram;
+            var ssboSize = sizeof(ColorSomething);
+            var color = Allocator.Alloc<ColorSomething>(ssboSize);
+            color->Color = new Vector3(12, 1, 1);
+            //m_VertexBuffer.BufferSSBO(sizeof(ColorSomething), color, () =>
+            //{
+            //    Allocator.Free(ref color, ref ssboSize);
+            //    IsUpdating = false;
+            //    m_IsReady = true;
+            //});
+            var shaderStorageBufferObject = factory.CreateShaderStorageBuffer(
+                new ShaderStorageBufferParameters<ColorSomething>(SSBOTypes.UniformBuffer, m_ShaderProgram, color, "Code"));
             m_CameraController = cameraContoller;
         }
 
@@ -47,7 +61,7 @@ namespace WorldMap.Heights.Map
             m_MapShader.ModelViewProjection.Set(projection);
 
             // Bind the current shader to the buffer and draw
-            m_VertexBuffer.BindAndDraw();
+            m_VertexBuffer.Draw();
             IsRendering = false;
         }
 
@@ -110,15 +124,7 @@ namespace WorldMap.Heights.Map
                 // IsUpdating = false;
                 // m_IsReady = true;
             });
-            var ssboSize = sizeof(ColorSomething);
-            var color = Allocator.Alloc<ColorSomething>(ssboSize);
-            color->Color = new Vector3(12, 133, 14);
-            m_VertexBuffer.BufferSSBO(sizeof(ColorSomething), color, () =>
-            {
-                Allocator.Free(ref color, ref ssboSize);
-                IsUpdating = false;
-                m_IsReady = true;
-            });
+
         }
     }
 }

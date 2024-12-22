@@ -2,6 +2,7 @@
 using WorldMap.Common.Buffers.Interfaces;
 using WorldMap.Common.Factories.Interfaces;
 using WorldMap.Common.Models.Buffers;
+using WorldMap.Common.Models.Enums;
 using WorldMap.Common.Models.Shaders;
 using WorldMap.Common.OpenGL.Buffers;
 using WorldMap.Common.OpenGL.Shaders;
@@ -43,5 +44,17 @@ namespace WorldMap.Common.OpenGL.Factories
                                          vertexBufferParameters,
                                          VertexAttribPointerType.Float);
         }
+
+        public IShaderStorageBuffer<T> CreateShaderStorageBuffer<T>(ShaderStorageBufferParameters<T> shaderStorageBufferParameters) 
+            where T : unmanaged
+        {
+            shaderStorageBufferParameters.SSBOTypes =
+                Environment.OSVersion.Platform == PlatformID.Win32NT ? SSBOTypes.SSBO : SSBOTypes.UniformBuffer;
+
+            // Add validation in spair time
+
+            return new ShaderStorageBufferGL<T>(Gl, shaderStorageBufferParameters);
+        }
+
     }
 }

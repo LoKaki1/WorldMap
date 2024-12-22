@@ -1,10 +1,6 @@
 ﻿using Silk.NET.OpenGL;
-using System.Xml.Linq;
-using System;
-using WorldMap.Common.OpenGL.Shaders.Converters;
-using WorldMap.Common.Shaders.Interfaces;
-using static Silk.NET.Core.Native.WinString;
 using System.Numerics;
+using WorldMap.Common.Shaders.Interfaces;
 
 namespace WorldMap.Common.OpenGL.Shaders
 {

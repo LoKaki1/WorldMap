@@ -31,19 +31,15 @@ public unsafe interface IVertexBuffer<T> where T : unmanaged
     /// The buffer primitives types we will draw like trinagles, trinagles strip etc,
     /// </summary>
     Primitives BufferPrimitive { get; set; }
-
-
     /// <summary>
     /// Bind the buffer to the current program and executes the program on the buffer
     /// 
     /// (IMPORTANT what I described is true for openGL if we move API move this documentation to the open gl implmenetation and update the documentation)
     /// </summary>
-    void BindAndDraw();
+    void Draw();
 
     /// <summary>
     /// Buffer the data to the GPU context 
     /// </summary>
     void BufferVertexData(int size, T* data, Action? onBuffer = null);
-    void BufferSSBO<SSBO>(int size, SSBO* data, Action? onBuffer = null)
-        where SSBO : unmanaged;
 }

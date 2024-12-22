@@ -24,8 +24,7 @@ public abstract unsafe class VertexBufferBase<T> : IVertexBuffer<T> where T : un
         OnBuffered = parameters.OnBuffered;
     }
 
-    public abstract void BindAndDraw();
+    public abstract void Draw();
 
     public abstract void BufferVertexData(int size, T* data, Action? onBuffer = null);
-    public abstract void BufferSSBO<SSBO>(int size, SSBO* data, Action? onBuffer = null) where SSBO : unmanaged;
 }
