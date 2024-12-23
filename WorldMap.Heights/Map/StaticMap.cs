@@ -26,7 +26,6 @@ namespace WorldMap.Heights.Map
         public bool IsRendering { get; private set; }
 
         public bool IsUpdating { get; private set; }
-        private bool m_IsReady;
 
         public StaticMap(IBufferFactory factory,
                          IShaderFactory shaderFactory,
@@ -39,12 +38,6 @@ namespace WorldMap.Heights.Map
             var ssboSize = sizeof(ColorSomething);
             var color = Allocator.Alloc<ColorSomething>(ssboSize);
             color->Color = new Vector3(12, 1, 1);
-            //m_VertexBuffer.BufferSSBO(sizeof(ColorSomething), color, () =>
-            //{
-            //    Allocator.Free(ref color, ref ssboSize);
-            //    IsUpdating = false;
-            //    m_IsReady = true;
-            //});
             var shaderStorageBufferObject = factory.CreateShaderStorageBuffer(
                 new ShaderStorageBufferParameters<ColorSomething>(SSBOTypes.UniformBuffer, m_ShaderProgram, color, "Code"));
             m_CameraController = cameraContoller;
@@ -67,7 +60,7 @@ namespace WorldMap.Heights.Map
 
         public void Update()
         {
-            if (m_IsReady || IsUpdating) return;
+            if (IsUpdating) return;
 
             IsUpdating = true;
             GenerateMap();
@@ -121,8 +114,7 @@ namespace WorldMap.Heights.Map
             m_VertexBuffer.BufferVertexData(Constants.VERTICES_PER_CHUNK, offset, () =>
             {
                 Allocator.Free(ref offset, ref bytes_vertexData);
-                // IsUpdating = false;
-                // m_IsReady = true;
+                IsUpdating = false;
             });
 
         }
