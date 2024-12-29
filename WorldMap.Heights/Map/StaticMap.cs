@@ -26,7 +26,6 @@ namespace WorldMap.Heights.Map
         public bool IsRendering { get; private set; }
 
         public bool IsUpdating { get; private set; }
-        private bool m_IsReady;
 
         public StaticMap(IBufferFactory factory,
                          IShaderFactory shaderFactory,
@@ -63,7 +62,7 @@ namespace WorldMap.Heights.Map
 
         public void Update()
         {
-            if (m_IsReady || IsUpdating) return;
+            if (IsUpdating) return;
 
             IsUpdating = true;
             GenerateMap();
