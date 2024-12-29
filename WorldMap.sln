@@ -7,11 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorldMap", "WorldMap\WorldM
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorldMap.Common", "WorldMap.Common\WorldMap.Common.csproj", "{88C1E19C-A5BF-4227-B721-7842E1729E6A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorldMap.Common.OpenGL", "WorldMap.Common.OpenGL\WorldMap.Common.OpenGL.csproj", "{8C8A29AE-9BA8-4E87-AFB0-C9B107D6335E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorldMap.Common.OpenGL", "WorldMap.Common.OpenGL\WorldMap.Common.OpenGL.csproj", "{8C8A29AE-9BA8-4E87-AFB0-C9B107D6335E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorldMap.Heights", "WorldMap.Heights\WorldMap.Heights.csproj", "{842C775A-C7D7-4DE6-90A1-78128395A8A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WroldMap.Transformations", "WroldMap.Transformations\WroldMap.Transformations.csproj", "{3C92BD34-AABD-495F-B5D0-C0151FDE1303}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WroldMap.Transformations", "WroldMap.Transformations\WroldMap.Transformations.csproj", "{3C92BD34-AABD-495F-B5D0-C0151FDE1303}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorldMap.Map", "WorldMap.Map\WorldMap.Map.csproj", "{2C1857EC-100C-455E-A5D4-3F8A71F1B2FB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,14 +31,14 @@ Global
 		{8C8A29AE-9BA8-4E87-AFB0-C9B107D6335E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C8A29AE-9BA8-4E87-AFB0-C9B107D6335E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C8A29AE-9BA8-4E87-AFB0-C9B107D6335E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{842C775A-C7D7-4DE6-90A1-78128395A8A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{842C775A-C7D7-4DE6-90A1-78128395A8A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{842C775A-C7D7-4DE6-90A1-78128395A8A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{842C775A-C7D7-4DE6-90A1-78128395A8A7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3C92BD34-AABD-495F-B5D0-C0151FDE1303}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3C92BD34-AABD-495F-B5D0-C0151FDE1303}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C92BD34-AABD-495F-B5D0-C0151FDE1303}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C92BD34-AABD-495F-B5D0-C0151FDE1303}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C1857EC-100C-455E-A5D4-3F8A71F1B2FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C1857EC-100C-455E-A5D4-3F8A71F1B2FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C1857EC-100C-455E-A5D4-3F8A71F1B2FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C1857EC-100C-455E-A5D4-3F8A71F1B2FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -4,8 +4,7 @@ using WorldMap.Heights.Map.Interfaces;
 namespace WorldMap.Heights.Map
 {
     /// <summary>
-    /// Contains a multiple chunks this class should work with the chunkmap 
-    /// and should use the uniform buffer for buffering the camera position for the tessellation
+    // Let's for start do it as stupid as possible without tesslation 
     /// </summary>
     public sealed class MultipleMap : IMap
     {

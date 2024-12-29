@@ -46,7 +46,6 @@ namespace WorldMap.Common.OpenGL.Factories
         }
 
         public IShaderStorageBuffer<T> CreateShaderStorageBuffer<T>(ShaderStorageBufferParameters<T> shaderStorageBufferParameters) 
-            where T : unmanaged
         {
             shaderStorageBufferParameters.SSBOTypes =
                 Environment.OSVersion.Platform == PlatformID.Win32NT ? SSBOTypes.SSBO : SSBOTypes.UniformBuffer;

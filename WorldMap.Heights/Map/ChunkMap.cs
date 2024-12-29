@@ -33,7 +33,7 @@ namespace WorldMap.Heights.Map
 
         public void Render()
         {
-            IsRendering = true;
+            //IsRendering = true;
             //// First let opengl that we want to use this shader now
             //m_MapShader.UseShader();
             //// creation the projection

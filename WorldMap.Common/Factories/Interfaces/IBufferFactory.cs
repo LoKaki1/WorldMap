@@ -8,6 +8,5 @@ namespace WorldMap.Common.Factories.Interfaces
         IVertexBuffer<T> CreateVertexBuffer<T>(VertexBufferParameters vertexBufferParameters) 
             where T : unmanaged;
         IShaderStorageBuffer<T> CreateShaderStorageBuffer<T>(ShaderStorageBufferParameters<T> shaderStorageBufferParameters)
-            where T : unmanaged;
     }
 }
