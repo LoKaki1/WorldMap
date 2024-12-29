@@ -23,7 +23,7 @@ public static unsafe class Allocator
         data = null;
     }
 
-    public static void Free<T>(ref T* data) where T : unmanaged
+    public static void Free<T>(T* data) where T : unmanaged
     {
         if (data != null)
             NativeMemory.Free(data);

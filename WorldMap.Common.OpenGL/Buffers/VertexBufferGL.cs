@@ -1,7 +1,6 @@
 ﻿using Silk.NET.OpenGL;
 using WorldMap.Common.Buffers.Abstracts;
 using WorldMap.Common.Models.Buffers;
-using WorldMap.Common.Models.Enums;
 using WorldMap.Common.OpenGL.Buffers.Converters;
 using WorldMap.Common.OpenGL.Pipline;
 
@@ -88,29 +87,10 @@ namespace WorldMap.Common.OpenGL.Buffers
                                    (uint)VertexSize,
                                    null);
         }
-        //public override unsafe void BufferSSBO<SSBO>(int size,
-        //                                             SSBO* data,
-        //                                             Action? onBuffer = null)
-        //{
-        //    PiplineGL.EnqueToPipline(() =>
-        //     {
-        //         BindSSBO();
-        //         Gl.BindBufferBase(BufferTargetARB.UniformBuffer, 0u, SSBOHandle);
-        //         Gl.BufferData(BufferTargetARB.UniformBuffer,
-        //                          (uint)size,
-        //                          data,
-        //                          BufferUsageARB.StaticDraw);
-        //         UnbindSSBO();
 
-        //         IsVerticesBufferd = true;
-        //         onBuffer?.Invoke();
-        //     });
-        //}
         // Shortcut functions
         void BindVAO() => Gl.BindVertexArray(VaoHandle);
         void BindVBO() => Gl.BindBuffer(BufferTargetARB.ArrayBuffer, VboHandle);
-        //void BindSSBO() => Gl.BindBuffer(BufferTargetARB.UniformBuffer, SSBOHandle);
-        //void UnbindSSBO() => Gl.BindBuffer(BufferTargetARB.UniformBuffer, 0);
         void UnbindVAO() => Gl.BindVertexArray(0);
         void UnbindVBO() => Gl.BindBuffer(BufferTargetARB.ArrayBuffer, 0);
     }

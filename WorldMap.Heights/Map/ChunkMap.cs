@@ -1,7 +1,5 @@
 ﻿using System.Numerics;
-using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
-using UltimateQuadTree;
 using WorldMap.Common.Allocators;
 using WorldMap.Common.Buffers.Interfaces;
 using WorldMap.Common.Camera.Interfaces;
@@ -16,49 +14,36 @@ using WorldMap.Heights.Vertex;
 
 namespace WorldMap.Heights.Map
 {
-    public sealed unsafe class StaticMap : IMap
+    public unsafe sealed class ChunkMap : IMap
     {
         private readonly IVertexBuffer<HeightVertex> m_VertexBuffer;
         private readonly ICameraContoller m_CameraController;
-        private readonly HeightMapShader m_MapShader;
-        private readonly IShaderProgram m_ShaderProgram;
 
         public bool IsRendering { get; private set; }
-
         public bool IsUpdating { get; private set; }
         private bool m_IsReady;
 
-        public StaticMap(IBufferFactory factory,
-                         IShaderFactory shaderFactory,
-                         ICameraContoller cameraContoller,
-                         Vector3 offset=default)
+        public ChunkMap(IBufferFactory factory,
+                        ICameraContoller cameraContoller)
         {
             var vertexParams = new VertexBufferParameters(Primitives.TrianglesStrips);
             m_VertexBuffer = factory.CreateVertexBuffer<HeightVertex>(vertexParams);
-            m_MapShader = new HeightMapShader(shaderFactory);
-            m_ShaderProgram = m_MapShader.ShaderProgram;
-            var ssboSize = sizeof(ChunkData);
-            var color = Allocator.Alloc<ChunkData>(ssboSize);
-            color->Color = offset;
-
-            var shaderStorageBufferObject = factory.CreateShaderStorageBuffer(
-                new ShaderStorageBufferParameters<ChunkData>(SSBOTypes.UniformBuffer, m_ShaderProgram, color, "Code"));
             m_CameraController = cameraContoller;
         }
 
         public void Render()
         {
             IsRendering = true;
-            // First let opengl that we want to use this shader now
-            m_MapShader.UseShader();
-            // creation the projection
-            var projection = m_CameraController.GetViewProjection();
-            // Set the projection in the uniform
-            m_MapShader.ModelViewProjection.Set(projection);
+            //// First let opengl that we want to use this shader now
+            //m_MapShader.UseShader();
+            //// creation the projection
+            //var projection = m_CameraController.GetViewProjection();
+            //// Set the projection in the uniform
+            //m_MapShader.ModelViewProjection.Set(projection);
 
-            // Bind the current shader to the buffer and draw
-            m_VertexBuffer.Draw();
-            IsRendering = false;
+            //// Bind the current shader to the buffer and draw
+            //m_VertexBuffer.Draw();
+            //IsRendering = false;
         }
 
         public void Update()
@@ -120,7 +105,6 @@ namespace WorldMap.Heights.Map
                 IsUpdating = false;
                 m_IsReady = true;
             });
-
         }
     }
 }

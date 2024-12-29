@@ -1,4 +1,5 @@
 ﻿using Silk.NET.OpenGL;
+using WorldMap.Common.Allocators;
 using WorldMap.Common.Buffers.Interfaces;
 using WorldMap.Common.Models.Buffers;
 using WorldMap.Common.Models.Enums;
@@ -72,6 +73,7 @@ namespace WorldMap.Common.OpenGL.Buffers
                                   BufferUsageARB.DynamicDraw);
                     Gl.BindBuffer(BufferTargetARB.ShaderStorageBuffer, 0);
                 }
+                Allocator.Free(shaderStorageBufferParameters.Data);
             });
         }
 

@@ -33,9 +33,7 @@ public class HeightMapShader
 
     public static string FragmentShader = @"
     #version 410
-    layout(std140) uniform Code {
-    vec3 color;
-};
+
 out vec4 gColor;
 
 in vec2 vUV;
@@ -59,15 +57,18 @@ void main()
     //gColor.rgb += vec3(1.0-color);
      if (showWireframe)
      {
-        vec3 p = color * 0.0025;
+        //vec3 p = color * 0.0025;
         gColor.rgb *= 0.25;
-        gColor.rgb += vec3(1.0 - barycentric(vBary, 1.5)) - p ;
+        gColor.rgb += vec3(1.0 - barycentric(vBary, 1.5));
      }
 }
 ";
 
     public static string VertexShader = @$"
 #version 410
+    layout(std140) uniform Code {{
+        vec3 color;
+    }};
     layout (location = 0) in float aY;
 
     out vec2 vUV;
@@ -101,6 +102,7 @@ void main()
 
         // Render to the screen
         vec3 pos = vec3(xPos, aY, zPos);
+        pos += color;
         gl_Position = mvp * vec4(pos, 1.0);
 
 
